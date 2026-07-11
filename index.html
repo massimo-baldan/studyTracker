@@ -1,0 +1,1604 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#f3f1ea" />
+    <title>Quaderno a Due</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ============ TOKENS ============ */
+      :root {
+        --paper: #f3f1ea;
+        --card: #fffdf8;
+        --ink: #202a3c;
+        --ink-soft: #5b6472;
+        --ink-faint: #9aa1ac;
+        --line: rgba(32, 42, 60, 0.09);
+        --margin: #c1443a;
+        --margin-soft: rgba(193, 68, 58, 0.12);
+        --user1: #d99a2b;
+        --user1-soft: rgba(217, 154, 43, 0.16);
+        --user2: #2f8f82;
+        --user2-soft: rgba(47, 143, 130, 0.16);
+        --success: #3f8f5f;
+        --success-soft: rgba(63, 143, 95, 0.14);
+        --radius: 16px;
+        --shadow:
+          0 2px 10px rgba(32, 42, 60, 0.06), 0 1px 2px rgba(32, 42, 60, 0.04);
+        --font-display: "Kalam", cursive;
+        --font-body: "Inter", system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: var(--font-body);
+        color: var(--ink);
+        background-color: var(--paper);
+        background-image: repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 30px,
+          var(--line) 30px,
+          var(--line) 31px
+        );
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+        overscroll-behavior-y: none;
+      }
+      button {
+        font-family: inherit;
+      }
+      input,
+      select {
+        font-family: inherit;
+      }
+      ::selection {
+        background: var(--margin-soft);
+      }
+
+      #app {
+        max-width: 560px;
+        margin: 0 auto;
+        padding-bottom: 92px;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* ============ HEADER ============ */
+      header.top {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: linear-gradient(
+          180deg,
+          var(--paper) 78%,
+          rgba(243, 241, 234, 0)
+        );
+        padding: 18px 18px 8px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      header.top .brand {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+      }
+      header.top .brand .title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 27px;
+        color: var(--ink);
+        position: relative;
+        padding-left: 12px;
+      }
+      header.top .brand .title::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 2px;
+        bottom: 2px;
+        width: 3px;
+        background: var(--margin);
+        border-radius: 2px;
+      }
+      header.top .brand .sub {
+        font-size: 11px;
+        color: var(--ink-soft);
+        margin-top: 4px;
+        padding-left: 12px;
+      }
+      .user-pill {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 7px 14px 7px 8px;
+        box-shadow: var(--shadow);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .user-pill .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      /* ============ MAIN ============ */
+      main {
+        padding: 4px 18px 24px 18px;
+      }
+      .screen {
+        display: none;
+        animation: fadein 0.18s ease;
+      }
+      .screen.active {
+        display: block;
+      }
+      @keyframes fadein {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      h2.section-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        margin: 10px 0 14px 2px;
+        color: var(--ink);
+      }
+
+      .card {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 16px 16px 16px 20px;
+        margin-bottom: 14px;
+        position: relative;
+        border: 1px solid var(--line);
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 14px;
+        bottom: 14px;
+        width: 3px;
+        background: var(--margin-soft);
+        border-radius: 2px;
+      }
+      .card.accent-user1::before {
+        background: var(--user1);
+      }
+      .card.accent-user2::before {
+        background: var(--user2);
+      }
+
+      /* ============ CALENDAR ============ */
+      .month-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .month-nav button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: var(--ink-soft);
+        padding: 6px 10px;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+      .month-nav button:active {
+        background: var(--line);
+      }
+      .month-nav .label {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 19px;
+        text-transform: capitalize;
+      }
+      .weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        margin-bottom: 4px;
+      }
+      .weekdays span {
+        font-size: 11px;
+        color: var(--ink-faint);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .days-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+      }
+      .day-cell {
+        aspect-ratio: 1/1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        background: transparent;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--ink);
+        position: relative;
+        font-family: var(--font-mono);
+      }
+      .day-cell.other-month {
+        color: var(--ink-faint);
+        opacity: 0.45;
+      }
+      .day-cell.today {
+        border-color: var(--margin);
+        font-weight: 700;
+      }
+      .day-cell .fill {
+        position: absolute;
+        bottom: 6px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+      .day-cell.has-entry {
+        background: var(--line);
+      }
+
+      /* ============ MODAL / SHEET ============ */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(32, 42, 60, 0.42);
+        display: none;
+        align-items: flex-end;
+        z-index: 100;
+      }
+      .overlay.active {
+        display: flex;
+      }
+      .sheet {
+        background: var(--paper);
+        width: 100%;
+        border-radius: 22px 22px 0 0;
+        padding: 20px 20px 26px 20px;
+        max-height: 88vh;
+        overflow-y: auto;
+        box-shadow: 0 -6px 24px rgba(32, 42, 60, 0.2);
+        animation: slideup 0.2s ease;
+      }
+      @keyframes slideup {
+        from {
+          transform: translateY(24px);
+          opacity: 0;
+        }
+        to {
+          transform: none;
+          opacity: 1;
+        }
+      }
+      .sheet .handle {
+        width: 40px;
+        height: 4px;
+        background: var(--line);
+        border-radius: 3px;
+        margin: 0 auto 14px auto;
+      }
+      .sheet h3 {
+        font-family: var(--font-display);
+        font-size: 21px;
+        margin: 0 0 14px 0;
+        text-transform: capitalize;
+      }
+      .field {
+        margin-bottom: 16px;
+      }
+      .field label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        margin-bottom: 6px;
+      }
+      .field .hint {
+        font-size: 11px;
+        color: var(--ink-faint);
+        margin-top: 4px;
+      }
+      .field input[type="number"],
+      .field input[type="text"] {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 10px;
+        padding: 11px 12px;
+        font-size: 16px;
+        color: var(--ink);
+        font-family: var(--font-mono);
+      }
+      .field input[type="text"] {
+        font-family: var(--font-body);
+      }
+      .field input:focus {
+        outline: none;
+        border-color: var(--margin);
+      }
+      .chip-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--card);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        color: var(--ink-soft);
+      }
+      .chip.selected {
+        background: var(--ink);
+        color: var(--card);
+        border-color: var(--ink);
+      }
+      .sheet-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 6px;
+      }
+      .btn {
+        flex: 1;
+        border: none;
+        border-radius: 12px;
+        padding: 13px 16px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: var(--font-body);
+      }
+      .btn-primary {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .btn-danger {
+        background: transparent;
+        color: var(--margin);
+        border: 1px solid var(--margin-soft);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--ink-soft);
+        border: 1px solid var(--line);
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      /* ============ PROGRESS BARS ============ */
+      .metric {
+        margin-bottom: 14px;
+      }
+      .metric-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 6px;
+      }
+      .metric-label {
+        font-size: 12px;
+        color: var(--ink-soft);
+        font-weight: 600;
+      }
+      .metric-value {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--ink);
+      }
+      .bar-track {
+        background: var(--line);
+        border-radius: 999px;
+        height: 10px;
+        overflow: hidden;
+      }
+      .bar-fill {
+        height: 100%;
+        border-radius: 999px;
+        transition: width 0.3s ease;
+      }
+      .bar-fill.user1 {
+        background: linear-gradient(90deg, var(--user1), #eab65a);
+      }
+      .bar-fill.user2 {
+        background: linear-gradient(90deg, var(--user2), #4bb3a4);
+      }
+      .bar-fill.done {
+        background: linear-gradient(90deg, var(--success), #63c186);
+      }
+      .goal-msg {
+        font-size: 12px;
+        margin-top: 8px;
+        color: var(--ink-soft);
+      }
+      .goal-msg.done {
+        color: var(--success);
+        font-weight: 700;
+      }
+
+      /* ============ LEADERBOARD ============ */
+      .lb-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .lb-row:last-child {
+        border-bottom: none;
+      }
+      .lb-medal {
+        font-size: 20px;
+        width: 26px;
+        text-align: center;
+      }
+      .lb-name {
+        flex: 1;
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .lb-hours {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      /* ============ DAILY CHART ============ */
+      .chart {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        height: 110px;
+        padding-top: 10px;
+      }
+      .chart-day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        flex: 1;
+      }
+      .chart-bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 80px;
+      }
+      .chart-bar {
+        width: 9px;
+        border-radius: 4px 4px 2px 2px;
+        background: var(--line);
+        min-height: 3px;
+      }
+      .chart-bar.user1 {
+        background: var(--user1);
+      }
+      .chart-bar.user2 {
+        background: var(--user2);
+      }
+      .chart-day .lab {
+        font-size: 10px;
+        color: var(--ink-faint);
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .week-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .week-nav button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: var(--ink-soft);
+        padding: 6px 10px;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+      .week-nav .label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        font-family: var(--font-mono);
+      }
+
+      /* ============ FORMS (obiettivi / impostazioni) ============ */
+      .form-row {
+        display: flex;
+        gap: 10px;
+      }
+      .form-row .field {
+        flex: 1;
+      }
+
+      /* ============ BOTTOM NAV ============ */
+      nav.bottom {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 30;
+        background: var(--card);
+        border-top: 1px solid var(--line);
+        display: flex;
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px)) 6px;
+        max-width: 560px;
+        margin: 0 auto;
+      }
+      nav.bottom .tab {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        background: none;
+        border: none;
+        padding: 8px 4px;
+        cursor: pointer;
+        color: var(--ink-faint);
+        font-size: 10.5px;
+        font-weight: 700;
+      }
+      nav.bottom .tab .icon {
+        font-size: 19px;
+      }
+      nav.bottom .tab.active {
+        color: var(--margin);
+      }
+
+      .banner {
+        font-size: 12px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        margin-bottom: 14px;
+        background: var(--user1-soft);
+        color: #8a5f14;
+        border: 1px solid rgba(217, 154, 43, 0.3);
+      }
+      .banner.error {
+        background: rgba(193, 68, 58, 0.1);
+        color: #9c3428;
+        border-color: rgba(193, 68, 58, 0.3);
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 96px;
+        transform: translateX(-50%);
+        background: var(--ink);
+        color: var(--paper);
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        z-index: 200;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.25s ease,
+          transform 0.25s ease;
+        max-width: 86%;
+        text-align: center;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-4px);
+      }
+
+      .empty-hint {
+        font-size: 13px;
+        color: var(--ink-faint);
+        text-align: center;
+        padding: 20px 10px;
+      }
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 8px 12px;
+        border-radius: 10px;
+        background: var(--line);
+        margin-bottom: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <header class="top">
+        <div class="brand">
+          <div class="title">Quaderno a Due</div>
+          <div class="sub">tieni traccia, sfida chi vuoi</div>
+        </div>
+        <div class="user-pill" id="userPill" onclick="openUserSwitch()">
+          <span class="dot" id="userDot"></span>
+          <span id="userPillLabel">—</span>
+          <span style="color: var(--ink-faint)">▾</span>
+        </div>
+      </header>
+
+      <main>
+        <!-- ============ CALENDARIO ============ -->
+        <section class="screen" id="screen-calendario">
+          <h2 class="section-title">Calendario</h2>
+          <div id="syncBanner"></div>
+          <div class="card">
+            <div class="month-nav">
+              <button onclick="changeMonth(-1)">‹</button>
+              <div class="label" id="monthLabel">—</div>
+              <button onclick="changeMonth(1)">›</button>
+            </div>
+            <div class="weekdays">
+              <span>L</span><span>M</span><span>M</span><span>G</span
+              ><span>V</span><span>S</span><span>D</span>
+            </div>
+            <div class="days-grid" id="daysGrid"></div>
+          </div>
+          <p class="empty-hint">
+            Tocca un giorno per registrare le ore studiate.
+          </p>
+        </section>
+
+        <!-- ============ OBIETTIVI ============ -->
+        <section class="screen" id="screen-obiettivi">
+          <h2 class="section-title">Obiettivo settimanale</h2>
+          <div class="card">
+            <p style="font-size: 13px; color: var(--ink-soft); margin-top: 0">
+              Imposta quanto vuoi studiare ogni settimana (da lunedì a
+              domenica). Lascia 0 in un campo se non vuoi un obiettivo su quella
+              voce.
+            </p>
+            <div class="field">
+              <label>Ore a settimana</label>
+              <input
+                type="number"
+                id="goalHours"
+                min="0"
+                step="0.5"
+                inputmode="decimal"
+              />
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Pagine a settimana</label>
+                <input
+                  type="number"
+                  id="goalPages"
+                  min="0"
+                  step="1"
+                  inputmode="numeric"
+                />
+              </div>
+              <div class="field">
+                <label>Esercizi a settimana</label>
+                <input
+                  type="number"
+                  id="goalExercises"
+                  min="0"
+                  step="1"
+                  inputmode="numeric"
+                />
+              </div>
+            </div>
+            <button
+              class="btn btn-primary"
+              style="width: 100%"
+              onclick="saveGoal()"
+            >
+              Salva obiettivo
+            </button>
+          </div>
+        </section>
+
+        <!-- ============ CONFRONTO ============ -->
+        <section class="screen" id="screen-confronto">
+          <h2 class="section-title">Confronto</h2>
+          <div class="week-nav">
+            <button onclick="changeWeek(-1)">‹</button>
+            <div class="label" id="weekLabel">—</div>
+            <button onclick="changeWeek(1)">›</button>
+          </div>
+
+          <div class="card">
+            <div
+              style="
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--ink-soft);
+                margin-bottom: 4px;
+              "
+            >
+              🏆 Classifica della settimana
+            </div>
+            <div id="leaderboard"></div>
+          </div>
+
+          <div id="userCards"></div>
+
+          <div class="card">
+            <div
+              style="
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--ink-soft);
+                margin-bottom: 2px;
+              "
+            >
+              Ore per giorno
+            </div>
+            <div class="chart" id="dailyChart"></div>
+          </div>
+        </section>
+
+        <!-- ============ IMPOSTAZIONI ============ -->
+        <section class="screen" id="screen-impostazioni">
+          <h2 class="section-title">Impostazioni</h2>
+
+          <div class="card">
+            <div id="statusArea"></div>
+            <button
+              class="btn btn-ghost"
+              style="width: 100%; margin-top: 10px"
+              onclick="forceRefresh()"
+            >
+              Aggiorna dati ora
+            </button>
+          </div>
+
+          <div class="card">
+            <div
+              style="
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--ink-soft);
+                margin-bottom: 10px;
+              "
+            >
+              Nomi dei due studenti
+            </div>
+            <div class="field">
+              <label>Studente 1</label>
+              <input type="text" id="name1Input" maxlength="20" />
+            </div>
+            <div class="field">
+              <label>Studente 2</label>
+              <input type="text" id="name2Input" maxlength="20" />
+            </div>
+            <button
+              class="btn btn-primary"
+              style="width: 100%"
+              onclick="saveNames()"
+            >
+              Salva nomi
+            </button>
+          </div>
+
+          <div class="card">
+            <div
+              style="
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--margin);
+                margin-bottom: 10px;
+              "
+            >
+              Zona pericolosa
+            </div>
+            <button
+              class="btn btn-danger"
+              style="width: 100%"
+              onclick="resetMyData()"
+            >
+              Cancella tutti i miei dati registrati
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <nav class="bottom">
+        <button
+          class="tab active"
+          data-tab="calendario"
+          onclick="showTab('calendario')"
+        >
+          <span class="icon">📅</span><span>Calendario</span>
+        </button>
+        <button class="tab" data-tab="obiettivi" onclick="showTab('obiettivi')">
+          <span class="icon">🎯</span><span>Obiettivi</span>
+        </button>
+        <button class="tab" data-tab="confronto" onclick="showTab('confronto')">
+          <span class="icon">🏆</span><span>Confronto</span>
+        </button>
+        <button
+          class="tab"
+          data-tab="impostazioni"
+          onclick="showTab('impostazioni')"
+        >
+          <span class="icon">⚙️</span><span>Impostazioni</span>
+        </button>
+      </nav>
+
+      <!-- ============ SHEET: registra giornata ============ -->
+      <div class="overlay" id="dayOverlay">
+        <div class="sheet">
+          <div class="handle"></div>
+          <h3 id="dayTitle">—</h3>
+          <div class="field">
+            <label>Ore studiate</label>
+            <input
+              type="number"
+              id="entryHours"
+              min="0"
+              max="24"
+              step="0.25"
+              inputmode="decimal"
+              placeholder="es. 2.5"
+            />
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label>Pagine (facoltativo)</label>
+              <input
+                type="number"
+                id="entryPages"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                placeholder="es. 30"
+              />
+            </div>
+            <div class="field">
+              <label>Esercizi (facoltativo)</label>
+              <input
+                type="number"
+                id="entryExercises"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                placeholder="es. 12"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label>Difficoltà degli esercizi</label>
+            <div class="chip-row" id="difficultyChips">
+              <div class="chip" data-val="easy">Facile</div>
+              <div class="chip" data-val="normal">Normale</div>
+              <div class="chip" data-val="hard">Difficile</div>
+              <div class="chip" data-val="very_hard">Molto difficile</div>
+            </div>
+          </div>
+          <div class="sheet-actions">
+            <button
+              class="btn btn-danger"
+              id="deleteEntryBtn"
+              onclick="deleteEntry()"
+              style="display: none"
+            >
+              Elimina
+            </button>
+            <button class="btn btn-ghost" onclick="closeDaySheet()">
+              Annulla
+            </button>
+            <button class="btn btn-primary" onclick="saveEntry()">Salva</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SHEET: cambia utente ============ -->
+      <div class="overlay" id="userOverlay">
+        <div class="sheet">
+          <div class="handle"></div>
+          <h3>Chi sei?</h3>
+          <div class="sheet-actions" style="margin-bottom: 4px">
+            <button
+              class="btn btn-ghost"
+              id="switchToUser1"
+              onclick="setCurrentUser('user1')"
+            >
+              —
+            </button>
+            <button
+              class="btn btn-ghost"
+              id="switchToUser2"
+              onclick="setCurrentUser('user2')"
+            >
+              —
+            </button>
+          </div>
+          <p
+            style="
+              font-size: 12px;
+              color: var(--ink-faint);
+              text-align: center;
+              margin-top: 14px;
+            "
+          >
+            Questo sceglie solo quali dati stai inserendo/modificando su questo
+            telefono. Non è una password.
+          </p>
+        </div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </div>
+
+    <script>
+      /* ======================================================================
+   CONFIGURAZIONE JSONBIN
+   Sostituisci i due valori qui sotto con quelli del tuo bin su jsonbin.io
+   (vedi il README per la procedura passo-passo, ci vogliono 3 minuti)
+   ====================================================================== */
+      const JSONBIN_CONFIG = {
+        BIN_ID: "6a523d7af5f4af5e2980cb52",
+        API_KEY: "$2a$10$3RtlW/IlTCqPUomr8QlFauspEafjjFTwHsJ97AYTKG6r5GSWWOqbq",
+      };
+      /* ====================================================================== */
+
+      const OFFLINE_MODE =
+        JSONBIN_CONFIG.BIN_ID.startsWith("INSERISCI") ||
+        JSONBIN_CONFIG.API_KEY.startsWith("INSERISCI");
+      const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}`;
+      const LOCAL_KEY = "quaderno_a_due_offline_data_v1";
+      const CURRENT_USER_KEY = "quaderno_a_due_current_user_v1";
+
+      const DIFF_LABELS = {
+        easy: "Facile",
+        normal: "Normale",
+        hard: "Difficile",
+        very_hard: "Molto difficile",
+      };
+      const WEEKDAY_LABELS = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
+      const MONTH_LABELS = [
+        "gennaio",
+        "febbraio",
+        "marzo",
+        "aprile",
+        "maggio",
+        "giugno",
+        "luglio",
+        "agosto",
+        "settembre",
+        "ottobre",
+        "novembre",
+        "dicembre",
+      ];
+
+      function defaultData() {
+        return {
+          config: {
+            names: { user1: "Amico 1", user2: "Amico 2" },
+            goals: {
+              user1: { hours: 0, pages: 0, exercises: 0 },
+              user2: { hours: 0, pages: 0, exercises: 0 },
+            },
+          },
+          entries: {},
+        };
+      }
+
+      let appData = defaultData();
+      let currentUser = localStorage.getItem(CURRENT_USER_KEY) || "user1";
+      let calMonth = new Date();
+      calMonth.setDate(1);
+      let weekAnchor = new Date();
+      let lastGoodLoad = false;
+      let pendingSheetDate = null;
+      let selectedDifficulty = null;
+
+      /* ============ API LAYER ============ */
+      const api = {
+        async load() {
+          if (OFFLINE_MODE) {
+            const raw = localStorage.getItem(LOCAL_KEY);
+            return raw ? JSON.parse(raw) : defaultData();
+          }
+          const res = await fetch(`${JSONBIN_URL}/latest`, {
+            headers: { "X-Master-Key": JSONBIN_CONFIG.API_KEY },
+          });
+          if (!res.ok)
+            throw new Error(
+              "Errore di lettura dal server (" + res.status + ")",
+            );
+          const json = await res.json();
+          const record = json.record || defaultData();
+          if (!record.config) record.config = defaultData().config;
+          if (!record.entries) record.entries = {};
+          if (!record.config.names)
+            record.config.names = defaultData().config.names;
+          if (!record.config.goals)
+            record.config.goals = defaultData().config.goals;
+          return record;
+        },
+        async save(data) {
+          if (OFFLINE_MODE) {
+            localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
+            return;
+          }
+          const res = await fetch(JSONBIN_URL, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Master-Key": JSONBIN_CONFIG.API_KEY,
+            },
+            body: JSON.stringify(data),
+          });
+          if (!res.ok)
+            throw new Error(
+              "Errore di scrittura sul server (" + res.status + ")",
+            );
+        },
+      };
+
+      async function mutateRemote(mutator, successMsg) {
+        try {
+          const fresh = await api.load();
+          mutator(fresh);
+          await api.save(fresh);
+          appData = fresh;
+          lastGoodLoad = true;
+          renderAll();
+          if (successMsg) showToast(successMsg);
+          renderSyncBanner();
+        } catch (err) {
+          console.error(err);
+          showToast("Non sono riuscito a salvare. Controlla la connessione.");
+        }
+      }
+
+      async function loadAndRender(silent) {
+        try {
+          appData = await api.load();
+          lastGoodLoad = true;
+        } catch (err) {
+          console.error(err);
+          lastGoodLoad = false;
+          if (!silent)
+            showToast(
+              "Impossibile caricare i dati. Uso l'ultima copia disponibile.",
+            );
+        }
+        renderAll();
+        renderSyncBanner();
+      }
+
+      /* ============ UTIL ============ */
+      function pad(n) {
+        return n < 10 ? "0" + n : "" + n;
+      }
+      function toISO(d) {
+        return (
+          d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate())
+        );
+      }
+      function parseISO(s) {
+        const [y, m, d] = s.split("-").map(Number);
+        return new Date(y, m - 1, d);
+      }
+      function sameDay(a, b) {
+        return (
+          a.getFullYear() === b.getFullYear() &&
+          a.getMonth() === b.getMonth() &&
+          a.getDate() === b.getDate()
+        );
+      }
+      function startOfWeekMonday(d) {
+        const day = (d.getDay() + 6) % 7;
+        const r = new Date(d);
+        r.setDate(d.getDate() - day);
+        r.setHours(0, 0, 0, 0);
+        return r;
+      }
+      function addDays(d, n) {
+        const r = new Date(d);
+        r.setDate(r.getDate() + n);
+        return r;
+      }
+      function fmtHours(n) {
+        n = Math.round(n * 100) / 100;
+        return (
+          (Number.isInteger(n)
+            ? n
+            : n.toFixed(2).replace(/0$/, "").replace(/\.$/, "")) + ""
+        );
+      }
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => t.classList.remove("show"), 2600);
+      }
+
+      function otherUser(u) {
+        return u === "user1" ? "user2" : "user1";
+      }
+      function userName(u) {
+        return (
+          appData.config.names[u] || (u === "user1" ? "Amico 1" : "Amico 2")
+        );
+      }
+      function userColorVar(u) {
+        return u === "user1" ? "--user1" : "--user2";
+      }
+
+      /* ============ TABS ============ */
+      function showTab(tab) {
+        document
+          .querySelectorAll(".screen")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById("screen-" + tab).classList.add("active");
+        document
+          .querySelectorAll("nav.bottom .tab")
+          .forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+        if (tab === "confronto") renderConfronto();
+        if (tab === "obiettivi") renderObiettivi();
+        if (tab === "impostazioni") renderImpostazioni();
+        if (tab === "calendario") renderCalendario();
+      }
+
+      /* ============ USER SWITCH ============ */
+      function openUserSwitch() {
+        document.getElementById("switchToUser1").textContent =
+          userName("user1");
+        document.getElementById("switchToUser2").textContent =
+          userName("user2");
+        document.getElementById("userOverlay").classList.add("active");
+      }
+      function closeUserSwitch() {
+        document.getElementById("userOverlay").classList.remove("active");
+      }
+      function setCurrentUser(u) {
+        currentUser = u;
+        localStorage.setItem(CURRENT_USER_KEY, u);
+        closeUserSwitch();
+        renderAll();
+      }
+      document.getElementById("userOverlay").addEventListener("click", (e) => {
+        if (e.target.id === "userOverlay") closeUserSwitch();
+      });
+      document.getElementById("dayOverlay").addEventListener("click", (e) => {
+        if (e.target.id === "dayOverlay") closeDaySheet();
+      });
+
+      /* ============ HEADER ============ */
+      function renderHeader() {
+        document.getElementById("userPillLabel").textContent =
+          userName(currentUser);
+        document.getElementById("userDot").style.background =
+          `var(${userColorVar(currentUser)})`;
+      }
+
+      /* ============ CALENDARIO ============ */
+      function changeMonth(delta) {
+        calMonth.setMonth(calMonth.getMonth() + delta);
+        renderCalendario();
+      }
+      function renderCalendario() {
+        document.getElementById("monthLabel").textContent =
+          MONTH_LABELS[calMonth.getMonth()] + " " + calMonth.getFullYear();
+        const grid = document.getElementById("daysGrid");
+        grid.innerHTML = "";
+        const firstOfMonth = new Date(
+          calMonth.getFullYear(),
+          calMonth.getMonth(),
+          1,
+        );
+        const gridStart = startOfWeekMonday(firstOfMonth);
+        const today = new Date();
+
+        for (let i = 0; i < 42; i++) {
+          const d = addDays(gridStart, i);
+          const iso = toISO(d);
+          const cell = document.createElement("div");
+          cell.className = "day-cell";
+          if (d.getMonth() !== calMonth.getMonth())
+            cell.classList.add("other-month");
+          if (sameDay(d, today)) cell.classList.add("today");
+
+          const entryKey = currentUser + "_" + iso;
+          const entry = appData.entries[entryKey];
+          if (entry) {
+            cell.classList.add("has-entry");
+          }
+
+          cell.innerHTML = `<span>${d.getDate()}</span>`;
+          if (entry) {
+            const dot = document.createElement("div");
+            dot.className = "fill";
+            dot.style.background = `var(${userColorVar(currentUser)})`;
+            cell.appendChild(dot);
+          }
+          cell.onclick = () => openDaySheet(iso);
+          grid.appendChild(cell);
+        }
+      }
+
+      function openDaySheet(iso) {
+        pendingSheetDate = iso;
+        const d = parseISO(iso);
+        const dayName = [
+          "domenica",
+          "lunedì",
+          "martedì",
+          "mercoledì",
+          "giovedì",
+          "venerdì",
+          "sabato",
+        ][d.getDay()];
+        document.getElementById("dayTitle").textContent =
+          `${dayName} ${d.getDate()} ${MONTH_LABELS[d.getMonth()]}`;
+
+        const entryKey = currentUser + "_" + iso;
+        const entry = appData.entries[entryKey];
+        document.getElementById("entryHours").value = entry ? entry.hours : "";
+        document.getElementById("entryPages").value =
+          entry && entry.pages ? entry.pages : "";
+        document.getElementById("entryExercises").value =
+          entry && entry.exercises ? entry.exercises : "";
+        selectedDifficulty = entry ? entry.difficulty || null : null;
+        refreshDifficultyChips();
+        document.getElementById("deleteEntryBtn").style.display = entry
+          ? "block"
+          : "none";
+
+        document.getElementById("dayOverlay").classList.add("active");
+      }
+      function closeDaySheet() {
+        document.getElementById("dayOverlay").classList.remove("active");
+        pendingSheetDate = null;
+      }
+      function refreshDifficultyChips() {
+        document.querySelectorAll("#difficultyChips .chip").forEach((chip) => {
+          chip.classList.toggle(
+            "selected",
+            chip.dataset.val === selectedDifficulty,
+          );
+        });
+      }
+      document.querySelectorAll("#difficultyChips .chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          selectedDifficulty =
+            selectedDifficulty === chip.dataset.val ? null : chip.dataset.val;
+          refreshDifficultyChips();
+        });
+      });
+
+      function saveEntry() {
+        if (!pendingSheetDate) return;
+        const hoursVal = parseFloat(
+          document.getElementById("entryHours").value,
+        );
+        if (isNaN(hoursVal) || hoursVal < 0) {
+          showToast("Inserisci le ore studiate (anche 0.5).");
+          return;
+        }
+        const pagesVal = parseInt(document.getElementById("entryPages").value);
+        const exercisesVal = parseInt(
+          document.getElementById("entryExercises").value,
+        );
+        const iso = pendingSheetDate;
+        const key = currentUser + "_" + iso;
+
+        const entry = {
+          user: currentUser,
+          date: iso,
+          hours: hoursVal,
+          pages: isNaN(pagesVal) ? null : pagesVal,
+          exercises: isNaN(exercisesVal) ? null : exercisesVal,
+          difficulty:
+            isNaN(exercisesVal) || exercisesVal <= 0
+              ? null
+              : selectedDifficulty,
+        };
+
+        mutateRemote((data) => {
+          data.entries[key] = entry;
+        }, "Giornata salvata ✓");
+        closeDaySheet();
+      }
+      function deleteEntry() {
+        if (!pendingSheetDate) return;
+        const key = currentUser + "_" + pendingSheetDate;
+        mutateRemote((data) => {
+          delete data.entries[key];
+        }, "Voce eliminata");
+        closeDaySheet();
+      }
+
+      /* ============ OBIETTIVI ============ */
+      function renderObiettivi() {
+        const g = appData.config.goals[currentUser] || {
+          hours: 0,
+          pages: 0,
+          exercises: 0,
+        };
+        document.getElementById("goalHours").value = g.hours || "";
+        document.getElementById("goalPages").value = g.pages || "";
+        document.getElementById("goalExercises").value = g.exercises || "";
+      }
+      function saveGoal() {
+        const hours =
+          parseFloat(document.getElementById("goalHours").value) || 0;
+        const pages = parseInt(document.getElementById("goalPages").value) || 0;
+        const exercises =
+          parseInt(document.getElementById("goalExercises").value) || 0;
+        mutateRemote((data) => {
+          data.config.goals[currentUser] = { hours, pages, exercises };
+        }, "Obiettivo salvato ✓");
+      }
+
+      /* ============ CONFRONTO ============ */
+      function changeWeek(delta) {
+        weekAnchor = addDays(weekAnchor, delta * 7);
+        renderConfronto();
+      }
+      function weeklyTotals(user, monday) {
+        const totals = {
+          hours: 0,
+          pages: 0,
+          exercises: 0,
+          byDay: [0, 0, 0, 0, 0, 0, 0],
+        };
+        for (let i = 0; i < 7; i++) {
+          const d = addDays(monday, i);
+          const key = user + "_" + toISO(d);
+          const e = appData.entries[key];
+          if (e) {
+            totals.hours += e.hours || 0;
+            totals.pages += e.pages || 0;
+            totals.exercises += e.exercises || 0;
+            totals.byDay[i] = e.hours || 0;
+          }
+        }
+        return totals;
+      }
+      function renderConfronto() {
+        const monday = startOfWeekMonday(weekAnchor);
+        const sunday = addDays(monday, 6);
+        document.getElementById("weekLabel").textContent =
+          `${monday.getDate()} ${MONTH_LABELS[monday.getMonth()].slice(0, 3)} – ${sunday.getDate()} ${MONTH_LABELS[sunday.getMonth()].slice(0, 3)}`;
+
+        const t1 = weeklyTotals("user1", monday);
+        const t2 = weeklyTotals("user2", monday);
+
+        // leaderboard
+        const users = [
+          { id: "user1", name: userName("user1"), total: t1 },
+          { id: "user2", name: userName("user2"), total: t2 },
+        ].sort((a, b) => b.total.hours - a.total.hours);
+        const lb = document.getElementById("leaderboard");
+        lb.innerHTML = "";
+        if (t1.hours === 0 && t2.hours === 0) {
+          lb.innerHTML =
+            '<p class="empty-hint">Nessuna ora registrata questa settimana, ancora.</p>';
+        } else {
+          users.forEach((u, idx) => {
+            const medal = idx === 0 ? (u.total.hours > 0 ? "🥇" : "➖") : "🥈";
+            const row = document.createElement("div");
+            row.className = "lb-row";
+            row.innerHTML = `<span class="lb-medal">${medal}</span><span class="lb-name">${u.name}</span><span class="lb-hours">${fmtHours(u.total.hours)} h</span>`;
+            lb.appendChild(row);
+          });
+        }
+
+        // user cards
+        const container = document.getElementById("userCards");
+        container.innerHTML = "";
+        [
+          ["user1", t1],
+          ["user2", t2],
+        ].forEach(([uid, totals]) => {
+          container.appendChild(buildUserCard(uid, totals));
+        });
+
+        // daily chart
+        const chart = document.getElementById("dailyChart");
+        chart.innerHTML = "";
+        const maxH = Math.max(1, ...t1.byDay, ...t2.byDay);
+        for (let i = 0; i < 7; i++) {
+          const col = document.createElement("div");
+          col.className = "chart-day";
+          const h1 = Math.round((t1.byDay[i] / maxH) * 80);
+          const h2 = Math.round((t2.byDay[i] / maxH) * 80);
+          col.innerHTML = `
+      <div class="chart-bars">
+        <div class="chart-bar user1" style="height:${Math.max(h1, 2)}px" title="${userName("user1")}: ${fmtHours(t1.byDay[i])}h"></div>
+        <div class="chart-bar user2" style="height:${Math.max(h2, 2)}px" title="${userName("user2")}: ${fmtHours(t2.byDay[i])}h"></div>
+      </div>
+      <div class="lab">${WEEKDAY_LABELS[i]}</div>
+    `;
+          chart.appendChild(col);
+        }
+      }
+      function buildUserCard(uid, totals) {
+        const goal = appData.config.goals[uid] || {
+          hours: 0,
+          pages: 0,
+          exercises: 0,
+        };
+        const div = document.createElement("div");
+        div.className = "card accent-" + uid;
+        const metrics = [
+          {
+            key: "hours",
+            label: "Ore",
+            value: totals.hours,
+            goal: goal.hours,
+            unit: "h",
+            fmt: (v) => fmtHours(v),
+          },
+          {
+            key: "pages",
+            label: "Pagine",
+            value: totals.pages,
+            goal: goal.pages,
+            unit: "",
+            fmt: (v) => Math.round(v),
+          },
+          {
+            key: "exercises",
+            label: "Esercizi",
+            value: totals.exercises,
+            goal: goal.exercises,
+            unit: "",
+            fmt: (v) => Math.round(v),
+          },
+        ];
+        let html = `<div style="font-family:var(--font-display);font-weight:700;font-size:19px;margin-bottom:10px">${userName(uid)}</div>`;
+        metrics.forEach((m) => {
+          if (!m.goal || m.goal <= 0) {
+            html += `<div class="metric">
+        <div class="metric-top"><span class="metric-label">${m.label}</span><span class="metric-value">${m.fmt(m.value)}${m.unit}</span></div>
+        <div class="bar-track"><div class="bar-fill ${uid}" style="width:0%"></div></div>
+      </div>`;
+            return;
+          }
+          const pct = Math.min(100, Math.round((m.value / m.goal) * 100));
+          const done = m.value >= m.goal;
+          const remaining = Math.max(0, m.goal - m.value);
+          html += `<div class="metric">
+      <div class="metric-top"><span class="metric-label">${m.label}</span><span class="metric-value">${m.fmt(m.value)}${m.unit} / ${m.fmt(m.goal)}${m.unit}</span></div>
+      <div class="bar-track"><div class="bar-fill ${done ? "done" : uid}" style="width:${pct}%"></div></div>
+      <div class="goal-msg ${done ? "done" : ""}">${done ? "🎉 Obiettivo raggiunto!" : `Mancano ${m.fmt(remaining)}${m.unit} ${m.label.toLowerCase() === "ore" ? "di studio" : m.label.toLowerCase()}`}</div>
+    </div>`;
+        });
+        div.innerHTML = html;
+        return div;
+      }
+
+      /* ============ IMPOSTAZIONI ============ */
+      function renderImpostazioni() {
+        document.getElementById("name1Input").value = userName("user1");
+        document.getElementById("name2Input").value = userName("user2");
+        const status = document.getElementById("statusArea");
+        if (OFFLINE_MODE) {
+          status.innerHTML = `<span class="status-badge">🟠 Modalità locale — dati salvati solo su questo telefono</span>
+      <p style="font-size:12px;color:var(--ink-soft)">Per sincronizzare tra i due telefoni, configura JSONBin nel file index.html (vedi README).</p>`;
+        } else if (lastGoodLoad) {
+          status.innerHTML = `<span class="status-badge">🟢 Sincronizzato</span>`;
+        } else {
+          status.innerHTML = `<span class="status-badge" style="background:var(--margin-soft);color:#9c3428">🔴 Errore di connessione — sto mostrando l'ultima copia salvata</span>`;
+        }
+      }
+      function saveNames() {
+        const n1 =
+          document.getElementById("name1Input").value.trim() || "Amico 1";
+        const n2 =
+          document.getElementById("name2Input").value.trim() || "Amico 2";
+        mutateRemote((data) => {
+          data.config.names = { user1: n1, user2: n2 };
+        }, "Nomi salvati ✓");
+      }
+      function resetMyData() {
+        if (
+          !confirm(
+            `Sicuro di voler cancellare TUTTI i dati registrati di ${userName(currentUser)}? Non si può annullare.`,
+          )
+        )
+          return;
+        mutateRemote((data) => {
+          Object.keys(data.entries).forEach((k) => {
+            if (data.entries[k].user === currentUser) delete data.entries[k];
+          });
+        }, "Dati cancellati");
+      }
+      function forceRefresh() {
+        showToast("Aggiorno…");
+        loadAndRender(false);
+      }
+
+      /* ============ SYNC BANNER (tab calendario) ============ */
+      function renderSyncBanner() {
+        const el = document.getElementById("syncBanner");
+        if (OFFLINE_MODE) {
+          el.innerHTML = `<div class="banner">🟠 Modalità locale: questi dati restano solo su questo telefono finché non configuri la sincronizzazione (vedi Impostazioni → README).</div>`;
+        } else if (!lastGoodLoad) {
+          el.innerHTML = `<div class="banner error">🔴 Non riesco a contattare il server. Sto mostrando l'ultima copia disponibile.</div>`;
+        } else {
+          el.innerHTML = "";
+        }
+      }
+
+      /* ============ RENDER ALL ============ */
+      function renderAll() {
+        renderHeader();
+        const activeTab = document.querySelector("nav.bottom .tab.active")
+          .dataset.tab;
+        if (activeTab === "calendario") renderCalendario();
+        if (activeTab === "obiettivi") renderObiettivi();
+        if (activeTab === "confronto") renderConfronto();
+        if (activeTab === "impostazioni") renderImpostazioni();
+      }
+
+      /* ============ POLLING & LIFECYCLE ============ */
+      setInterval(() => {
+        loadAndRender(true);
+      }, 25000);
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") loadAndRender(true);
+      });
+
+      /* ============ INIT ============ */
+      (async function init() {
+        await loadAndRender(false);
+        // primo avvio: se i nomi sono ancora quelli di default, apriamo Impostazioni
+        const namesAreDefault =
+          userName("user1") === "Amico 1" && userName("user2") === "Amico 2";
+        const noEntries = Object.keys(appData.entries).length === 0;
+        if (namesAreDefault && noEntries) {
+          showTab("impostazioni");
+        }
+      })();
+    </script>
+  </body>
+</html>
