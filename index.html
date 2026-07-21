@@ -202,6 +202,18 @@
       .card.accent-user2::before {
         background: var(--user2);
       }
+      .card-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--ink-soft);
+        margin-bottom: 10px;
+      }
+      .card-desc {
+        font-size: 12.5px;
+        color: var(--ink-soft);
+        margin: 0 0 14px 0;
+        line-height: 1.4;
+      }
 
       /* ============ CALENDAR ============ */
       .month-nav {
@@ -341,7 +353,8 @@
         margin-top: 4px;
       }
       .field input[type="number"],
-      .field input[type="text"] {
+      .field input[type="text"],
+      .field input[type="time"] {
         width: 100%;
         border: 1px solid var(--line);
         background: var(--card);
@@ -409,6 +422,12 @@
       }
       .btn:active {
         transform: scale(0.98);
+      }
+      .btn-small {
+        flex: none;
+        padding: 8px 12px;
+        font-size: 12.5px;
+        border-radius: 10px;
       }
 
       /* ============ PROGRESS BARS ============ */
@@ -493,7 +512,7 @@
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        height: 110px;
+        height: 138px;
         padding-top: 10px;
       }
       .chart-day {
@@ -527,6 +546,16 @@
         text-transform: uppercase;
         font-weight: 700;
       }
+      .chart-values {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        font-family: var(--font-mono);
+        font-size: 9.5px;
+        font-weight: 700;
+        line-height: 1.25;
+      }
 
       .week-nav {
         display: flex;
@@ -559,6 +588,43 @@
         flex: 1;
       }
 
+      /* ============ CUSTOM GOALS ============ */
+      .custom-goal-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .custom-goal-row .field {
+        flex: 1;
+        margin-bottom: 0;
+      }
+      .custom-goal-remove {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--ink-faint);
+        border-radius: 10px;
+        width: 40px;
+        height: 42px;
+        font-size: 15px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .add-custom-toggle {
+        width: 100%;
+        margin-top: 4px;
+      }
+      .add-custom-panel {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px dashed var(--line);
+      }
+      .empty-hint-small {
+        font-size: 12px;
+        color: var(--ink-faint);
+        margin: 0 0 10px 0;
+      }
+
       /* ============ BOTTOM NAV ============ */
       nav.bottom {
         position: fixed;
@@ -569,7 +635,7 @@
         background: var(--card);
         border-top: 1px solid var(--line);
         display: flex;
-        padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px)) 6px;
+        padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px)) 4px;
         max-width: 560px;
         margin: 0 auto;
       }
@@ -581,14 +647,14 @@
         gap: 3px;
         background: none;
         border: none;
-        padding: 8px 4px;
+        padding: 8px 2px;
         cursor: pointer;
         color: var(--ink-faint);
-        font-size: 10.5px;
+        font-size: 9.5px;
         font-weight: 700;
       }
       nav.bottom .tab .icon {
-        font-size: 19px;
+        font-size: 18px;
       }
       nav.bottom .tab.active {
         color: var(--margin);
@@ -684,7 +750,7 @@
             <div class="days-grid" id="daysGrid"></div>
           </div>
           <p class="empty-hint">
-            Tocca un giorno per registrare le ore studiate.
+            Tocca un giorno per registrare i tuoi dati.
           </p>
         </section>
 
@@ -692,24 +758,37 @@
         <section class="screen" id="screen-obiettivi">
           <h2 class="section-title">Obiettivo settimanale</h2>
           <div class="card">
-            <p style="font-size: 13px; color: var(--ink-soft); margin-top: 0">
-              Imposta quanto vuoi studiare ogni settimana (da lunedì a
-              domenica). Lascia 0 in un campo se non vuoi un obiettivo su quella
-              voce.
+            <p class="card-desc">
+              Imposta quanto vuoi fare ogni settimana (da lunedì a domenica).
+              Lascia 0 in un campo se non vuoi un obiettivo su quella voce.
+              <b>Devi fissare almeno una voce tra "ore di studio" ed "ore di
+              esercizi", e almeno una voce tra "pagine/slide" e "capitoli".</b>
             </p>
             <div class="field">
-              <label>Ore a settimana</label>
+              <label>Ore di studio a settimana</label>
               <input
                 type="number"
-                id="goalHours"
+                id="goalStudyHours"
                 min="0"
                 step="0.5"
                 inputmode="decimal"
               />
+              <div class="hint">Solo ore, nessun minuto.</div>
+            </div>
+            <div class="field">
+              <label>Ore di esercizi a settimana</label>
+              <input
+                type="number"
+                id="goalExerciseHours"
+                min="0"
+                step="0.5"
+                inputmode="decimal"
+              />
+              <div class="hint">Solo ore, nessun minuto.</div>
             </div>
             <div class="form-row">
               <div class="field">
-                <label>Pagine a settimana</label>
+                <label>Pagine/slide a settimana</label>
                 <input
                   type="number"
                   id="goalPages"
@@ -719,10 +798,10 @@
                 />
               </div>
               <div class="field">
-                <label>Esercizi a settimana</label>
+                <label>Capitoli a settimana</label>
                 <input
                   type="number"
-                  id="goalExercises"
+                  id="goalChapters"
                   min="0"
                   step="1"
                   inputmode="numeric"
@@ -737,6 +816,55 @@
               Salva obiettivo
             </button>
           </div>
+
+          <div class="card">
+            <div class="card-title">Obiettivi personalizzati (facoltativi)</div>
+            <div id="customGoalsList"></div>
+            <p class="empty-hint-small" id="customGoalsEmptyHint" style="display:none">
+              Nessun obiettivo personalizzato ancora. Puoi aggiungerne uno
+              qui sotto (es. "km di corsa", "litri d'acqua"...).
+            </p>
+            <button
+              class="btn btn-ghost add-custom-toggle"
+              onclick="toggleAddCustomPanel()"
+              id="addCustomToggleBtn"
+            >
+              + Aggiungi obiettivo personalizzato
+            </button>
+            <div class="add-custom-panel" id="addCustomPanel" style="display:none">
+              <div class="field">
+                <label>Scegli tra quelli già creati</label>
+                <div class="chip-row" id="existingCustomChips"></div>
+                <p class="empty-hint-small" id="noExistingHint" style="display:none; margin-top:8px;">
+                  Non ci sono ancora obiettivi personalizzati creati da nessuno dei due.
+                </p>
+              </div>
+              <div class="field">
+                <label>Oppure creane uno nuovo</label>
+                <div class="form-row">
+                  <input
+                    type="text"
+                    id="newCustomName"
+                    placeholder="Nome, es. km di corsa"
+                    maxlength="30"
+                  />
+                  <input
+                    type="text"
+                    id="newCustomUnit"
+                    placeholder="Unità, es. km (facoltativo)"
+                    maxlength="10"
+                  />
+                </div>
+              </div>
+              <button
+                class="btn btn-primary"
+                style="width: 100%"
+                onclick="createCustomMetric()"
+              >
+                Crea e aggiungi
+              </button>
+            </div>
+          </div>
         </section>
 
         <!-- ============ CONFRONTO ============ -->
@@ -749,34 +877,37 @@
           </div>
 
           <div class="card">
-            <div
-              style="
-                font-size: 13px;
-                font-weight: 700;
-                color: var(--ink-soft);
-                margin-bottom: 4px;
-              "
-            >
+            <div class="card-title" style="margin-bottom:4px">
               🏆 Classifica della settimana
             </div>
+            <p class="card-desc" style="margin-bottom:6px">
+              Somma di ore di studio + ore di esercizi.
+            </p>
             <div id="leaderboard"></div>
           </div>
 
           <div id="userCards"></div>
 
           <div class="card">
-            <div
-              style="
-                font-size: 13px;
-                font-weight: 700;
-                color: var(--ink-soft);
-                margin-bottom: 2px;
-              "
-            >
+            <div class="card-title" style="margin-bottom:2px">
               Ore per giorno
             </div>
+            <p class="card-desc" style="margin-bottom:0">
+              Ore di studio + ore di esercizi, per ciascuno.
+            </p>
             <div class="chart" id="dailyChart"></div>
           </div>
+        </section>
+
+        <!-- ============ PROGRESSI ============ -->
+        <section class="screen" id="screen-progressi">
+          <h2 class="section-title">I tuoi progressi</h2>
+          <div class="week-nav">
+            <button onclick="changeProgressWeek(-1)">‹</button>
+            <div class="label" id="progressWeekLabel">—</div>
+            <button onclick="changeProgressWeek(1)">›</button>
+          </div>
+          <div id="progressCardWrap"></div>
         </section>
 
         <!-- ============ IMPOSTAZIONI ============ -->
@@ -795,16 +926,7 @@
           </div>
 
           <div class="card">
-            <div
-              style="
-                font-size: 13px;
-                font-weight: 700;
-                color: var(--ink-soft);
-                margin-bottom: 10px;
-              "
-            >
-              Nomi dei due studenti
-            </div>
+            <div class="card-title">Nomi dei due studenti</div>
             <div class="field">
               <label>Studente 1</label>
               <input type="text" id="name1Input" maxlength="20" />
@@ -858,6 +980,9 @@
         <button class="tab" data-tab="confronto" onclick="showTab('confronto')">
           <span class="icon">🏆</span><span>Confronto</span>
         </button>
+        <button class="tab" data-tab="progressi" onclick="showTab('progressi')">
+          <span class="icon">📈</span><span>Progressi</span>
+        </button>
         <button
           class="tab"
           data-tab="impostazioni"
@@ -872,21 +997,19 @@
         <div class="sheet">
           <div class="handle"></div>
           <h3 id="dayTitle">—</h3>
-          <div class="field">
-            <label>Ore studiate</label>
-            <input
-              type="number"
-              id="entryHours"
-              min="0"
-              max="24"
-              step="0.25"
-              inputmode="decimal"
-              placeholder="es. 2.5"
-            />
+          <div class="form-row">
+            <div class="field">
+              <label>Tempo di studio</label>
+              <input type="time" id="entryStudyTime" step="60" />
+            </div>
+            <div class="field">
+              <label>Tempo di esercizi</label>
+              <input type="time" id="entryExerciseTime" step="60" />
+            </div>
           </div>
           <div class="form-row">
             <div class="field">
-              <label>Pagine (facoltativo)</label>
+              <label>Pagine/slide (facoltativo)</label>
               <input
                 type="number"
                 id="entryPages"
@@ -897,26 +1020,18 @@
               />
             </div>
             <div class="field">
-              <label>Esercizi (facoltativo)</label>
+              <label>Capitoli (facoltativo)</label>
               <input
                 type="number"
-                id="entryExercises"
+                id="entryChapters"
                 min="0"
                 step="1"
                 inputmode="numeric"
-                placeholder="es. 12"
+                placeholder="es. 1"
               />
             </div>
           </div>
-          <div class="field">
-            <label>Difficoltà degli esercizi</label>
-            <div class="chip-row" id="difficultyChips">
-              <div class="chip" data-val="easy">Facile</div>
-              <div class="chip" data-val="normal">Normale</div>
-              <div class="chip" data-val="hard">Difficile</div>
-              <div class="chip" data-val="very_hard">Molto difficile</div>
-            </div>
-          </div>
+          <div id="entryCustomFields"></div>
           <div class="sheet-actions">
             <button
               class="btn btn-danger"
@@ -988,15 +1103,10 @@
         JSONBIN_CONFIG.BIN_ID.startsWith("INSERISCI") ||
         JSONBIN_CONFIG.API_KEY.startsWith("INSERISCI");
       const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}`;
-      const LOCAL_KEY = "quaderno_a_due_offline_data_v1";
+      const LOCAL_KEY = "quaderno_a_due_offline_data_v2";
       const CURRENT_USER_KEY = "quaderno_a_due_current_user_v1";
+      const USER_CONFIRMED_KEY = "quaderno_a_due_user_confirmed_v1";
 
-      const DIFF_LABELS = {
-        easy: "Facile",
-        normal: "Normale",
-        hard: "Difficile",
-        very_hard: "Molto difficile",
-      };
       const WEEKDAY_LABELS = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
       const MONTH_LABELS = [
         "gennaio",
@@ -1013,17 +1123,108 @@
         "dicembre",
       ];
 
+      // le 4 voci di default, divise nelle 2 meta-categorie richieste
+      const DEFAULT_METRICS = [
+        {
+          key: "study_hours",
+          label: "Ore di studio",
+          unit: "h",
+          meta: "desk",
+          isHours: true,
+          entryField: "studyMinutes",
+        },
+        {
+          key: "exercise_hours",
+          label: "Ore di esercizi",
+          unit: "h",
+          meta: "desk",
+          isHours: true,
+          entryField: "exerciseMinutes",
+        },
+        {
+          key: "pages",
+          label: "Pagine/slide",
+          unit: "",
+          meta: "material",
+          isHours: false,
+          entryField: "pages",
+        },
+        {
+          key: "chapters",
+          label: "Capitoli",
+          unit: "",
+          meta: "material",
+          isHours: false,
+          entryField: "chapters",
+        },
+      ];
+
+      function defaultUserGoals() {
+        return {
+          study_hours: 0,
+          exercise_hours: 0,
+          pages: 0,
+          chapters: 0,
+          custom: {},
+        };
+      }
+
       function defaultData() {
         return {
           config: {
             names: { user1: "Amico 1", user2: "Amico 2" },
+            customMetrics: [], // [{id, name, unit}]
             goals: {
-              user1: { hours: 0, pages: 0, exercises: 0 },
-              user2: { hours: 0, pages: 0, exercises: 0 },
+              user1: defaultUserGoals(),
+              user2: defaultUserGoals(),
             },
           },
           entries: {},
         };
+      }
+
+      /* migrazione dati dal vecchio formato (ore decimali / pagine / n. esercizi) */
+      function migrateData(record) {
+        if (!record) return defaultData();
+        if (!record.config) record.config = defaultData().config;
+        if (!record.entries) record.entries = {};
+        if (!record.config.names) record.config.names = defaultData().config.names;
+        if (!record.config.customMetrics) record.config.customMetrics = [];
+        if (!record.config.goals) record.config.goals = defaultData().config.goals;
+
+        ["user1", "user2"].forEach((u) => {
+          const g = record.config.goals[u];
+          if (!g) {
+            record.config.goals[u] = defaultUserGoals();
+            return;
+          }
+          if (typeof g.study_hours === "undefined") {
+            // formato vecchio: {hours, pages, exercises}
+            const migrated = defaultUserGoals();
+            migrated.study_hours = g.hours || 0;
+            migrated.pages = g.pages || 0;
+            record.config.goals[u] = migrated;
+          } else {
+            if (!g.custom) g.custom = {};
+          }
+        });
+
+        Object.keys(record.entries).forEach((key) => {
+          const e = record.entries[key];
+          if (!e) return;
+          if (typeof e.studyMinutes === "undefined") {
+            // formato vecchio: {hours, pages, exercises, difficulty}
+            e.studyMinutes = Math.round((e.hours || 0) * 60);
+            e.exerciseMinutes = 0;
+            if (typeof e.chapters === "undefined") e.chapters = null;
+            delete e.exercises;
+            delete e.difficulty;
+            delete e.hours;
+          }
+          if (!e.custom) e.custom = {};
+        });
+
+        return record;
       }
 
       let appData = defaultData();
@@ -1031,16 +1232,16 @@
       let calMonth = new Date();
       calMonth.setDate(1);
       let weekAnchor = new Date();
+      let progressWeekAnchor = new Date();
       let lastGoodLoad = false;
       let pendingSheetDate = null;
-      let selectedDifficulty = null;
 
       /* ============ API LAYER ============ */
       const api = {
         async load() {
           if (OFFLINE_MODE) {
             const raw = localStorage.getItem(LOCAL_KEY);
-            return raw ? JSON.parse(raw) : defaultData();
+            return migrateData(raw ? JSON.parse(raw) : defaultData());
           }
           const res = await fetch(`${JSONBIN_URL}/latest`, {
             headers: { "X-Master-Key": JSONBIN_CONFIG.API_KEY },
@@ -1050,14 +1251,7 @@
               "Errore di lettura dal server (" + res.status + ")",
             );
           const json = await res.json();
-          const record = json.record || defaultData();
-          if (!record.config) record.config = defaultData().config;
-          if (!record.entries) record.entries = {};
-          if (!record.config.names)
-            record.config.names = defaultData().config.names;
-          if (!record.config.goals)
-            record.config.goals = defaultData().config.goals;
-          return record;
+          return migrateData(json.record || defaultData());
         },
         async save(data) {
           if (OFFLINE_MODE) {
@@ -1151,6 +1345,23 @@
             : n.toFixed(2).replace(/0$/, "").replace(/\.$/, "")) + ""
         );
       }
+      function fmtNum(n) {
+        return Math.round(n * 100) / 100;
+      }
+      function timeStrToMinutes(str) {
+        if (!str) return 0;
+        const parts = str.split(":");
+        if (parts.length < 2) return 0;
+        const h = parseInt(parts[0], 10) || 0;
+        const m = parseInt(parts[1], 10) || 0;
+        return h * 60 + m;
+      }
+      function minutesToTimeStr(min) {
+        min = Math.max(0, Math.round(min || 0));
+        const h = Math.floor(min / 60);
+        const m = min % 60;
+        return pad(h) + ":" + pad(m);
+      }
       function showToast(msg) {
         const t = document.getElementById("toast");
         t.textContent = msg;
@@ -1170,6 +1381,9 @@
       function userColorVar(u) {
         return u === "user1" ? "--user1" : "--user2";
       }
+      function customMetricById(id) {
+        return (appData.config.customMetrics || []).find((m) => m.id === id);
+      }
 
       /* ============ TABS ============ */
       function showTab(tab) {
@@ -1182,8 +1396,9 @@
           .forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
         if (tab === "confronto") renderConfronto();
         if (tab === "obiettivi") renderObiettivi();
-        if (tab === "impostazioni") renderImpostazioni();
+        if (tab === "progressi") renderProgressi();
         if (tab === "calendario") renderCalendario();
+        if (tab === "impostazioni") renderImpostazioni();
       }
 
       /* ============ USER SWITCH ============ */
@@ -1200,11 +1415,17 @@
       function setCurrentUser(u) {
         currentUser = u;
         localStorage.setItem(CURRENT_USER_KEY, u);
+        localStorage.setItem(USER_CONFIRMED_KEY, "1");
         closeUserSwitch();
         renderAll();
       }
       document.getElementById("userOverlay").addEventListener("click", (e) => {
-        if (e.target.id === "userOverlay") closeUserSwitch();
+        if (e.target.id === "userOverlay") {
+          // non permettere di chiudere senza scegliere, se non è mai stato confermato
+          if (localStorage.getItem(USER_CONFIRMED_KEY) === "1") {
+            closeUserSwitch();
+          }
+        }
       });
       document.getElementById("dayOverlay").addEventListener("click", (e) => {
         if (e.target.id === "dayOverlay") closeDaySheet();
@@ -1263,6 +1484,34 @@
         }
       }
 
+      function trackedCustomIdsForUser(user) {
+        const g = appData.config.goals[user];
+        if (!g || !g.custom) return [];
+        return Object.keys(g.custom);
+      }
+
+      function renderEntryCustomFields(entry) {
+        const wrap = document.getElementById("entryCustomFields");
+        wrap.innerHTML = "";
+        const ids = trackedCustomIdsForUser(currentUser);
+        if (ids.length === 0) return;
+        ids.forEach((id) => {
+          const metric = customMetricById(id);
+          if (!metric) return;
+          const val =
+            entry && entry.custom && typeof entry.custom[id] !== "undefined"
+              ? entry.custom[id]
+              : "";
+          const field = document.createElement("div");
+          field.className = "field";
+          field.innerHTML = `
+            <label>${metric.name}${metric.unit ? " (" + metric.unit + ")" : ""}</label>
+            <input type="number" step="0.1" inputmode="decimal" data-custom-id="${id}" value="${val}" placeholder="es. 0" />
+          `;
+          wrap.appendChild(field);
+        });
+      }
+
       function openDaySheet(iso) {
         pendingSheetDate = iso;
         const d = parseISO(iso);
@@ -1280,13 +1529,17 @@
 
         const entryKey = currentUser + "_" + iso;
         const entry = appData.entries[entryKey];
-        document.getElementById("entryHours").value = entry ? entry.hours : "";
+        document.getElementById("entryStudyTime").value = entry
+          ? minutesToTimeStr(entry.studyMinutes)
+          : "";
+        document.getElementById("entryExerciseTime").value = entry
+          ? minutesToTimeStr(entry.exerciseMinutes)
+          : "";
         document.getElementById("entryPages").value =
           entry && entry.pages ? entry.pages : "";
-        document.getElementById("entryExercises").value =
-          entry && entry.exercises ? entry.exercises : "";
-        selectedDifficulty = entry ? entry.difficulty || null : null;
-        refreshDifficultyChips();
+        document.getElementById("entryChapters").value =
+          entry && entry.chapters ? entry.chapters : "";
+        renderEntryCustomFields(entry);
         document.getElementById("deleteEntryBtn").style.display = entry
           ? "block"
           : "none";
@@ -1297,48 +1550,50 @@
         document.getElementById("dayOverlay").classList.remove("active");
         pendingSheetDate = null;
       }
-      function refreshDifficultyChips() {
-        document.querySelectorAll("#difficultyChips .chip").forEach((chip) => {
-          chip.classList.toggle(
-            "selected",
-            chip.dataset.val === selectedDifficulty,
-          );
-        });
-      }
-      document.querySelectorAll("#difficultyChips .chip").forEach((chip) => {
-        chip.addEventListener("click", () => {
-          selectedDifficulty =
-            selectedDifficulty === chip.dataset.val ? null : chip.dataset.val;
-          refreshDifficultyChips();
-        });
-      });
 
       function saveEntry() {
         if (!pendingSheetDate) return;
-        const hoursVal = parseFloat(
-          document.getElementById("entryHours").value,
+        const studyMinutes = timeStrToMinutes(
+          document.getElementById("entryStudyTime").value,
         );
-        if (isNaN(hoursVal) || hoursVal < 0) {
-          showToast("Inserisci le ore studiate (anche 0.5).");
+        const exerciseMinutes = timeStrToMinutes(
+          document.getElementById("entryExerciseTime").value,
+        );
+        const pagesVal = parseInt(document.getElementById("entryPages").value);
+        const chaptersVal = parseInt(
+          document.getElementById("entryChapters").value,
+        );
+        const custom = {};
+        document
+          .querySelectorAll("#entryCustomFields [data-custom-id]")
+          .forEach((inp) => {
+            const v = parseFloat(inp.value);
+            if (!isNaN(v)) custom[inp.dataset.customId] = v;
+          });
+
+        const hasAnyCustom = Object.values(custom).some((v) => v > 0);
+        if (
+          studyMinutes === 0 &&
+          exerciseMinutes === 0 &&
+          (isNaN(pagesVal) || pagesVal <= 0) &&
+          (isNaN(chaptersVal) || chaptersVal <= 0) &&
+          !hasAnyCustom
+        ) {
+          showToast("Inserisci almeno un dato per salvare la giornata.");
           return;
         }
-        const pagesVal = parseInt(document.getElementById("entryPages").value);
-        const exercisesVal = parseInt(
-          document.getElementById("entryExercises").value,
-        );
+
         const iso = pendingSheetDate;
         const key = currentUser + "_" + iso;
 
         const entry = {
           user: currentUser,
           date: iso,
-          hours: hoursVal,
+          studyMinutes,
+          exerciseMinutes,
           pages: isNaN(pagesVal) ? null : pagesVal,
-          exercises: isNaN(exercisesVal) ? null : exercisesVal,
-          difficulty:
-            isNaN(exercisesVal) || exercisesVal <= 0
-              ? null
-              : selectedDifficulty,
+          chapters: isNaN(chaptersVal) ? null : chaptersVal,
+          custom,
         };
 
         mutateRemote((data) => {
@@ -1357,24 +1612,205 @@
 
       /* ============ OBIETTIVI ============ */
       function renderObiettivi() {
-        const g = appData.config.goals[currentUser] || {
-          hours: 0,
-          pages: 0,
-          exercises: 0,
-        };
-        document.getElementById("goalHours").value = g.hours || "";
+        const g = appData.config.goals[currentUser] || defaultUserGoals();
+        document.getElementById("goalStudyHours").value = g.study_hours || "";
+        document.getElementById("goalExerciseHours").value =
+          g.exercise_hours || "";
         document.getElementById("goalPages").value = g.pages || "";
-        document.getElementById("goalExercises").value = g.exercises || "";
+        document.getElementById("goalChapters").value = g.chapters || "";
+
+        renderCustomGoalsList(g);
+        renderExistingCustomChips(g);
+        document.getElementById("addCustomPanel").style.display = "none";
       }
-      function saveGoal() {
-        const hours =
-          parseFloat(document.getElementById("goalHours").value) || 0;
-        const pages = parseInt(document.getElementById("goalPages").value) || 0;
-        const exercises =
-          parseInt(document.getElementById("goalExercises").value) || 0;
+
+      function renderCustomGoalsList(g) {
+        const list = document.getElementById("customGoalsList");
+        list.innerHTML = "";
+        const ids = Object.keys(g.custom || {});
+        document.getElementById("customGoalsEmptyHint").style.display =
+          ids.length === 0 ? "block" : "none";
+        ids.forEach((id) => {
+          const metric = customMetricById(id);
+          if (!metric) return;
+          const row = document.createElement("div");
+          row.className = "custom-goal-row";
+          row.innerHTML = `
+            <div class="field">
+              <label>${metric.name}${metric.unit ? " (" + metric.unit + " a settimana)" : " a settimana"}</label>
+              <input type="number" min="0" step="0.5" inputmode="decimal" data-goal-custom-id="${id}" value="${g.custom[id] || ""}" placeholder="0" />
+            </div>
+            <button class="custom-goal-remove" title="Rimuovi" onclick="removeCustomGoal('${id}')">✕</button>
+          `;
+          list.appendChild(row);
+        });
+      }
+
+      function renderExistingCustomChips(g) {
+        const wrap = document.getElementById("existingCustomChips");
+        wrap.innerHTML = "";
+        const already = new Set(Object.keys(g.custom || {}));
+        const options = (appData.config.customMetrics || []).filter(
+          (m) => !already.has(m.id),
+        );
+        document.getElementById("noExistingHint").style.display =
+          options.length === 0 ? "block" : "none";
+        options.forEach((m) => {
+          const chip = document.createElement("div");
+          chip.className = "chip";
+          chip.textContent = m.name + (m.unit ? " (" + m.unit + ")" : "");
+          chip.onclick = () => addExistingCustomGoal(m.id);
+          wrap.appendChild(chip);
+        });
+      }
+
+      function toggleAddCustomPanel() {
+        const panel = document.getElementById("addCustomPanel");
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
+      }
+
+      function addExistingCustomGoal(id) {
         mutateRemote((data) => {
-          data.config.goals[currentUser] = { hours, pages, exercises };
+          if (!data.config.goals[currentUser].custom) {
+            data.config.goals[currentUser].custom = {};
+          }
+          if (typeof data.config.goals[currentUser].custom[id] === "undefined") {
+            data.config.goals[currentUser].custom[id] = 0;
+          }
+        }, "Obiettivo aggiunto, imposta il valore e salva");
+      }
+
+      function slugify(name) {
+        return (
+          "c_" +
+          name
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]+/g, "_")
+            .replace(/^_+|_+$/g, "")
+            .slice(0, 20) +
+          "_" +
+          Math.random().toString(36).slice(2, 6)
+        );
+      }
+
+      function createCustomMetric() {
+        const name = document.getElementById("newCustomName").value.trim();
+        const unit = document.getElementById("newCustomUnit").value.trim();
+        if (!name) {
+          showToast("Dai un nome all'obiettivo personalizzato.");
+          return;
+        }
+        const dup = (appData.config.customMetrics || []).find(
+          (m) => m.name.toLowerCase() === name.toLowerCase(),
+        );
+        if (dup) {
+          addExistingCustomGoal(dup.id);
+          document.getElementById("newCustomName").value = "";
+          document.getElementById("newCustomUnit").value = "";
+          return;
+        }
+        const id = slugify(name);
+        mutateRemote((data) => {
+          if (!data.config.customMetrics) data.config.customMetrics = [];
+          data.config.customMetrics.push({ id, name, unit });
+          if (!data.config.goals[currentUser].custom) {
+            data.config.goals[currentUser].custom = {};
+          }
+          data.config.goals[currentUser].custom[id] = 0;
+        }, "Obiettivo creato ✓");
+        document.getElementById("newCustomName").value = "";
+        document.getElementById("newCustomUnit").value = "";
+      }
+
+      function removeCustomGoal(id) {
+        mutateRemote((data) => {
+          if (data.config.goals[currentUser].custom) {
+            delete data.config.goals[currentUser].custom[id];
+          }
+        }, "Obiettivo rimosso");
+      }
+
+      function saveGoal() {
+        const study_hours =
+          parseFloat(document.getElementById("goalStudyHours").value) || 0;
+        const exercise_hours =
+          parseFloat(document.getElementById("goalExerciseHours").value) || 0;
+        const pages = parseInt(document.getElementById("goalPages").value) || 0;
+        const chapters =
+          parseInt(document.getElementById("goalChapters").value) || 0;
+
+        if (study_hours <= 0 && exercise_hours <= 0) {
+          showToast(
+            "Fissa almeno 'ore di studio' oppure 'ore di esercizi'.",
+          );
+          return;
+        }
+        if (pages <= 0 && chapters <= 0) {
+          showToast("Fissa almeno 'pagine/slide' oppure 'capitoli'.");
+          return;
+        }
+
+        const custom = {};
+        document
+          .querySelectorAll("#customGoalsList [data-goal-custom-id]")
+          .forEach((inp) => {
+            const v = parseFloat(inp.value);
+            custom[inp.dataset.goalCustomId] = isNaN(v) ? 0 : v;
+          });
+
+        mutateRemote((data) => {
+          data.config.goals[currentUser] = {
+            study_hours,
+            exercise_hours,
+            pages,
+            chapters,
+            custom,
+          };
         }, "Obiettivo salvato ✓");
+      }
+
+      /* ============ CALCOLO TOTALI SETTIMANALI ============ */
+      function weeklyTotals(user, monday) {
+        const totals = {
+          studyHours: 0,
+          exerciseHours: 0,
+          deskHours: 0,
+          pages: 0,
+          chapters: 0,
+          custom: {},
+          byDayDesk: [0, 0, 0, 0, 0, 0, 0],
+        };
+        for (let i = 0; i < 7; i++) {
+          const d = addDays(monday, i);
+          const key = user + "_" + toISO(d);
+          const e = appData.entries[key];
+          if (e) {
+            const sh = (e.studyMinutes || 0) / 60;
+            const eh = (e.exerciseMinutes || 0) / 60;
+            totals.studyHours += sh;
+            totals.exerciseHours += eh;
+            totals.deskHours += sh + eh;
+            totals.pages += e.pages || 0;
+            totals.chapters += e.chapters || 0;
+            totals.byDayDesk[i] = sh + eh;
+            if (e.custom) {
+              Object.keys(e.custom).forEach((id) => {
+                totals.custom[id] = (totals.custom[id] || 0) + (e.custom[id] || 0);
+              });
+            }
+          }
+        }
+        return totals;
+      }
+
+      function metricValueFromTotals(metric, totals) {
+        if (metric.key === "study_hours") return totals.studyHours;
+        if (metric.key === "exercise_hours") return totals.exerciseHours;
+        if (metric.key === "pages") return totals.pages;
+        if (metric.key === "chapters") return totals.chapters;
+        return 0;
       }
 
       /* ============ CONFRONTO ============ */
@@ -1382,26 +1818,7 @@
         weekAnchor = addDays(weekAnchor, delta * 7);
         renderConfronto();
       }
-      function weeklyTotals(user, monday) {
-        const totals = {
-          hours: 0,
-          pages: 0,
-          exercises: 0,
-          byDay: [0, 0, 0, 0, 0, 0, 0],
-        };
-        for (let i = 0; i < 7; i++) {
-          const d = addDays(monday, i);
-          const key = user + "_" + toISO(d);
-          const e = appData.entries[key];
-          if (e) {
-            totals.hours += e.hours || 0;
-            totals.pages += e.pages || 0;
-            totals.exercises += e.exercises || 0;
-            totals.byDay[i] = e.hours || 0;
-          }
-        }
-        return totals;
-      }
+
       function renderConfronto() {
         const monday = startOfWeekMonday(weekAnchor);
         const sunday = addDays(monday, 6);
@@ -1411,109 +1828,155 @@
         const t1 = weeklyTotals("user1", monday);
         const t2 = weeklyTotals("user2", monday);
 
-        // leaderboard
-        const users = [
-          { id: "user1", name: userName("user1"), total: t1 },
-          { id: "user2", name: userName("user2"), total: t2 },
-        ].sort((a, b) => b.total.hours - a.total.hours);
+        // leaderboard: ore di studio + ore di esercizi
         const lb = document.getElementById("leaderboard");
         lb.innerHTML = "";
-        if (t1.hours === 0 && t2.hours === 0) {
+        if (t1.deskHours === 0 && t2.deskHours === 0) {
           lb.innerHTML =
             '<p class="empty-hint">Nessuna ora registrata questa settimana, ancora.</p>';
         } else {
+          const users = [
+            { id: "user1", name: userName("user1"), hours: t1.deskHours },
+            { id: "user2", name: userName("user2"), hours: t2.deskHours },
+          ].sort((a, b) => b.hours - a.hours);
+          const tie = users[0].hours === users[1].hours;
           users.forEach((u, idx) => {
-            const medal = idx === 0 ? (u.total.hours > 0 ? "🥇" : "➖") : "🥈";
+            const medal = tie ? "🥇" : idx === 0 ? "🥇" : "🥈";
             const row = document.createElement("div");
             row.className = "lb-row";
-            row.innerHTML = `<span class="lb-medal">${medal}</span><span class="lb-name">${u.name}</span><span class="lb-hours">${fmtHours(u.total.hours)} h</span>`;
+            row.innerHTML = `<span class="lb-medal">${medal}</span><span class="lb-name">${u.name}${tie ? " (pari merito)" : ""}</span><span class="lb-hours">${fmtHours(u.hours)} h</span>`;
             lb.appendChild(row);
           });
         }
 
-        // user cards
+        // user cards: SOLO le voci con obiettivo fissato dal singolo utente (default),
+        // + le voci personalizzate SOLO se comuni ad entrambi
         const container = document.getElementById("userCards");
         container.innerHTML = "";
         [
           ["user1", t1],
           ["user2", t2],
         ].forEach(([uid, totals]) => {
-          container.appendChild(buildUserCard(uid, totals));
+          container.appendChild(buildUserCardConfronto(uid, totals));
         });
 
         // daily chart
         const chart = document.getElementById("dailyChart");
         chart.innerHTML = "";
-        const maxH = Math.max(1, ...t1.byDay, ...t2.byDay);
+        const maxH = Math.max(1, ...t1.byDayDesk, ...t2.byDayDesk);
         for (let i = 0; i < 7; i++) {
           const col = document.createElement("div");
           col.className = "chart-day";
-          const h1 = Math.round((t1.byDay[i] / maxH) * 80);
-          const h2 = Math.round((t2.byDay[i] / maxH) * 80);
+          const h1 = Math.round((t1.byDayDesk[i] / maxH) * 80);
+          const h2 = Math.round((t2.byDayDesk[i] / maxH) * 80);
           col.innerHTML = `
       <div class="chart-bars">
-        <div class="chart-bar user1" style="height:${Math.max(h1, 2)}px" title="${userName("user1")}: ${fmtHours(t1.byDay[i])}h"></div>
-        <div class="chart-bar user2" style="height:${Math.max(h2, 2)}px" title="${userName("user2")}: ${fmtHours(t2.byDay[i])}h"></div>
+        <div class="chart-bar user1" style="height:${Math.max(h1, t1.byDayDesk[i] > 0 ? 3 : 0)}px" title="${userName("user1")}: ${fmtHours(t1.byDayDesk[i])}h"></div>
+        <div class="chart-bar user2" style="height:${Math.max(h2, t2.byDayDesk[i] > 0 ? 3 : 0)}px" title="${userName("user2")}: ${fmtHours(t2.byDayDesk[i])}h"></div>
+      </div>
+      <div class="chart-values">
+        <span style="color:var(--user1)">${fmtHours(t1.byDayDesk[i])}</span>
+        <span style="color:var(--user2)">${fmtHours(t2.byDayDesk[i])}</span>
       </div>
       <div class="lab">${WEEKDAY_LABELS[i]}</div>
     `;
           chart.appendChild(col);
         }
       }
-      function buildUserCard(uid, totals) {
-        const goal = appData.config.goals[uid] || {
-          hours: 0,
-          pages: 0,
-          exercises: 0,
-        };
+
+      function buildMetricHTML(uid, label, value, goal, unit, fmtFn) {
+        if (!goal || goal <= 0) return "";
+        const pct = Math.min(100, Math.round((value / goal) * 100));
+        const done = value >= goal;
+        const remaining = Math.max(0, goal - value);
+        return `<div class="metric">
+      <div class="metric-top"><span class="metric-label">${label}</span><span class="metric-value">${fmtFn(value)}${unit} / ${fmtFn(goal)}${unit}</span></div>
+      <div class="bar-track"><div class="bar-fill ${done ? "done" : uid}" style="width:${pct}%"></div></div>
+      <div class="goal-msg ${done ? "done" : ""}">${done ? "🎉 Obiettivo raggiunto!" : `Mancano ${fmtFn(remaining)}${unit} ${label.toLowerCase()}`}</div>
+    </div>`;
+      }
+
+      function buildUserCardConfronto(uid, totals) {
+        const goals = appData.config.goals[uid] || defaultUserGoals();
+        const otherGoals = appData.config.goals[otherUser(uid)] || defaultUserGoals();
         const div = document.createElement("div");
         div.className = "card accent-" + uid;
-        const metrics = [
-          {
-            key: "hours",
-            label: "Ore",
-            value: totals.hours,
-            goal: goal.hours,
-            unit: "h",
-            fmt: (v) => fmtHours(v),
-          },
-          {
-            key: "pages",
-            label: "Pagine",
-            value: totals.pages,
-            goal: goal.pages,
-            unit: "",
-            fmt: (v) => Math.round(v),
-          },
-          {
-            key: "exercises",
-            label: "Esercizi",
-            value: totals.exercises,
-            goal: goal.exercises,
-            unit: "",
-            fmt: (v) => Math.round(v),
-          },
-        ];
         let html = `<div style="font-family:var(--font-display);font-weight:700;font-size:19px;margin-bottom:10px">${userName(uid)}</div>`;
-        metrics.forEach((m) => {
-          if (!m.goal || m.goal <= 0) {
-            html += `<div class="metric">
-        <div class="metric-top"><span class="metric-label">${m.label}</span><span class="metric-value">${m.fmt(m.value)}${m.unit}</span></div>
-        <div class="bar-track"><div class="bar-fill ${uid}" style="width:0%"></div></div>
-      </div>`;
-            return;
-          }
-          const pct = Math.min(100, Math.round((m.value / m.goal) * 100));
-          const done = m.value >= m.goal;
-          const remaining = Math.max(0, m.goal - m.value);
-          html += `<div class="metric">
-      <div class="metric-top"><span class="metric-label">${m.label}</span><span class="metric-value">${m.fmt(m.value)}${m.unit} / ${m.fmt(m.goal)}${m.unit}</span></div>
-      <div class="bar-track"><div class="bar-fill ${done ? "done" : uid}" style="width:${pct}%"></div></div>
-      <div class="goal-msg ${done ? "done" : ""}">${done ? "🎉 Obiettivo raggiunto!" : `Mancano ${m.fmt(remaining)}${m.unit} ${m.label.toLowerCase() === "ore" ? "di studio" : m.label.toLowerCase()}`}</div>
-    </div>`;
+        let anyShown = false;
+
+        DEFAULT_METRICS.forEach((m) => {
+          const goalVal = goals[m.key] || 0;
+          if (goalVal <= 0) return;
+          anyShown = true;
+          const value = metricValueFromTotals(m, totals);
+          html += buildMetricHTML(uid, m.label, value, goalVal, m.unit, m.isHours ? fmtHours : Math.round);
         });
+
+        Object.keys(goals.custom || {}).forEach((id) => {
+          const myGoal = goals.custom[id] || 0;
+          const otherGoal = (otherGoals.custom || {})[id] || 0;
+          if (myGoal <= 0 || otherGoal <= 0) return; // deve essere comune ad entrambi
+          const metric = customMetricById(id);
+          if (!metric) return;
+          anyShown = true;
+          const value = totals.custom[id] || 0;
+          html += buildMetricHTML(uid, metric.name, value, myGoal, metric.unit ? " " + metric.unit : "", fmtNum);
+        });
+
+        if (!anyShown) {
+          html += `<p class="empty-hint">Nessun obiettivo da confrontare ancora.</p>`;
+        }
+
         div.innerHTML = html;
         return div;
+      }
+
+      /* ============ PROGRESSI (singolo utente, tutti gli obiettivi) ============ */
+      function changeProgressWeek(delta) {
+        progressWeekAnchor = addDays(progressWeekAnchor, delta * 7);
+        renderProgressi();
+      }
+
+      function renderProgressi() {
+        const monday = startOfWeekMonday(progressWeekAnchor);
+        const sunday = addDays(monday, 6);
+        document.getElementById("progressWeekLabel").textContent =
+          `${monday.getDate()} ${MONTH_LABELS[monday.getMonth()].slice(0, 3)} – ${sunday.getDate()} ${MONTH_LABELS[sunday.getMonth()].slice(0, 3)}`;
+
+        const totals = weeklyTotals(currentUser, monday);
+        const goals = appData.config.goals[currentUser] || defaultUserGoals();
+
+        const wrap = document.getElementById("progressCardWrap");
+        wrap.innerHTML = "";
+        const div = document.createElement("div");
+        div.className = "card accent-" + currentUser;
+        let html = `<div style="font-family:var(--font-display);font-weight:700;font-size:19px;margin-bottom:10px">${userName(currentUser)}</div>`;
+        let anyShown = false;
+
+        DEFAULT_METRICS.forEach((m) => {
+          const goalVal = goals[m.key] || 0;
+          if (goalVal <= 0) return;
+          anyShown = true;
+          const value = metricValueFromTotals(m, totals);
+          html += buildMetricHTML(currentUser, m.label, value, goalVal, m.unit, m.isHours ? fmtHours : Math.round);
+        });
+
+        Object.keys(goals.custom || {}).forEach((id) => {
+          const goalVal = goals.custom[id] || 0;
+          if (goalVal <= 0) return;
+          const metric = customMetricById(id);
+          if (!metric) return;
+          anyShown = true;
+          const value = totals.custom[id] || 0;
+          html += buildMetricHTML(currentUser, metric.name, value, goalVal, metric.unit ? " " + metric.unit : "", fmtNum);
+        });
+
+        if (!anyShown) {
+          html += `<p class="empty-hint">Non hai ancora fissato nessun obiettivo. Vai su "Obiettivi" per iniziare.</p>`;
+        }
+
+        div.innerHTML = html;
+        wrap.appendChild(div);
       }
 
       /* ============ IMPOSTAZIONI ============ */
@@ -1572,11 +2035,12 @@
       /* ============ RENDER ALL ============ */
       function renderAll() {
         renderHeader();
-        const activeTab = document.querySelector("nav.bottom .tab.active")
-          .dataset.tab;
+        const activeEl = document.querySelector("nav.bottom .tab.active");
+        const activeTab = activeEl ? activeEl.dataset.tab : "calendario";
         if (activeTab === "calendario") renderCalendario();
         if (activeTab === "obiettivi") renderObiettivi();
         if (activeTab === "confronto") renderConfronto();
+        if (activeTab === "progressi") renderProgressi();
         if (activeTab === "impostazioni") renderImpostazioni();
       }
 
@@ -1591,12 +2055,19 @@
       /* ============ INIT ============ */
       (async function init() {
         await loadAndRender(false);
-        // primo avvio: se i nomi sono ancora quelli di default, apriamo Impostazioni
+        // primo avvio in assoluto: se i nomi sono ancora quelli di default, apriamo Impostazioni
         const namesAreDefault =
           userName("user1") === "Amico 1" && userName("user2") === "Amico 2";
         const noEntries = Object.keys(appData.entries).length === 0;
         if (namesAreDefault && noEntries) {
           showTab("impostazioni");
+          return;
+        }
+        // altrimenti: mostriamo sempre il calendario correttamente popolato
+        showTab("calendario");
+        // e se su questo telefono non è mai stato confermato chi sta usando l'app, lo chiediamo
+        if (localStorage.getItem(USER_CONFIRMED_KEY) !== "1") {
+          openUserSwitch();
         }
       })();
     </script>
