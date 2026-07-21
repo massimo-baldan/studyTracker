@@ -1348,6 +1348,15 @@
       function fmtNum(n) {
         return Math.round(n * 100) / 100;
       }
+      function fmtHoursMin(n) {
+        const totalMin = Math.round((n || 0) * 60);
+        const h = Math.floor(totalMin / 60);
+        const m = totalMin % 60;
+        if (h === 0 && m === 0) return "0min";
+        if (h === 0) return m + "min";
+        if (m === 0) return h + "h";
+        return h + "h " + m + "min";
+      }
       function timeStrToMinutes(str) {
         if (!str) return 0;
         const parts = str.split(":");
@@ -1844,7 +1853,7 @@
             const medal = tie ? "🥇" : idx === 0 ? "🥇" : "🥈";
             const row = document.createElement("div");
             row.className = "lb-row";
-            row.innerHTML = `<span class="lb-medal">${medal}</span><span class="lb-name">${u.name}${tie ? " (pari merito)" : ""}</span><span class="lb-hours">${fmtHours(u.hours)} h</span>`;
+            row.innerHTML = `<span class="lb-medal">${medal}</span><span class="lb-name">${u.name}${tie ? " (pari merito)" : ""}</span><span class="lb-hours">${fmtHoursMin(u.hours)}</span>`;
             lb.appendChild(row);
           });
         }
@@ -1871,12 +1880,12 @@
           const h2 = Math.round((t2.byDayDesk[i] / maxH) * 80);
           col.innerHTML = `
       <div class="chart-bars">
-        <div class="chart-bar user1" style="height:${Math.max(h1, t1.byDayDesk[i] > 0 ? 3 : 0)}px" title="${userName("user1")}: ${fmtHours(t1.byDayDesk[i])}h"></div>
-        <div class="chart-bar user2" style="height:${Math.max(h2, t2.byDayDesk[i] > 0 ? 3 : 0)}px" title="${userName("user2")}: ${fmtHours(t2.byDayDesk[i])}h"></div>
+        <div class="chart-bar user1" style="height:${Math.max(h1, t1.byDayDesk[i] > 0 ? 3 : 0)}px" title="${userName("user1")}: ${fmtHoursMin(t1.byDayDesk[i])}"></div>
+        <div class="chart-bar user2" style="height:${Math.max(h2, t2.byDayDesk[i] > 0 ? 3 : 0)}px" title="${userName("user2")}: ${fmtHoursMin(t2.byDayDesk[i])}"></div>
       </div>
       <div class="chart-values">
-        <span style="color:var(--user1)">${fmtHours(t1.byDayDesk[i])}</span>
-        <span style="color:var(--user2)">${fmtHours(t2.byDayDesk[i])}</span>
+        <span style="color:var(--user1)">${fmtHoursMin(t1.byDayDesk[i])}</span>
+        <span style="color:var(--user2)">${fmtHoursMin(t2.byDayDesk[i])}</span>
       </div>
       <div class="lab">${WEEKDAY_LABELS[i]}</div>
     `;
@@ -1909,7 +1918,11 @@
           if (goalVal <= 0) return;
           anyShown = true;
           const value = metricValueFromTotals(m, totals);
-          html += buildMetricHTML(uid, m.label, value, goalVal, m.unit, m.isHours ? fmtHours : Math.round);
+          if (m.isHours) {
+            html += buildMetricHTML(uid, m.label, value, goalVal, "", fmtHoursMin);
+          } else {
+            html += buildMetricHTML(uid, m.label, value, goalVal, m.unit, Math.round);
+          }
         });
 
         Object.keys(goals.custom || {}).forEach((id) => {
@@ -1958,7 +1971,11 @@
           if (goalVal <= 0) return;
           anyShown = true;
           const value = metricValueFromTotals(m, totals);
-          html += buildMetricHTML(currentUser, m.label, value, goalVal, m.unit, m.isHours ? fmtHours : Math.round);
+          if (m.isHours) {
+            html += buildMetricHTML(currentUser, m.label, value, goalVal, "", fmtHoursMin);
+          } else {
+            html += buildMetricHTML(currentUser, m.label, value, goalVal, m.unit, Math.round);
+          }
         });
 
         Object.keys(goals.custom || {}).forEach((id) => {
@@ -2047,7 +2064,7 @@
       /* ============ POLLING & LIFECYCLE ============ */
       setInterval(() => {
         loadAndRender(true);
-      }, 25000);
+      }, 59000);
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") loadAndRender(true);
       });
