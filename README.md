@@ -1,4 +1,4 @@
-# Quaderno a Due 📓
+# Study Tracker 📓
 
 Mini app per tenere traccia delle ore di studio tue e di un amico, confrontarvi e
 darvi un po' di sana competizione. Un solo file HTML, pensato per il telefono,
