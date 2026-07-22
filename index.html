@@ -281,13 +281,6 @@
         border-color: var(--margin);
         font-weight: 700;
       }
-      .day-cell .fill {
-        position: absolute;
-        bottom: 6px;
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-      }
       .day-cell.has-entry {
         background: var(--line);
       }
@@ -370,6 +363,22 @@
       .field input:focus {
         outline: none;
         border-color: var(--margin);
+      }
+      .time-input-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .time-input-row input[type="number"] {
+        width: 100%;
+        text-align: center;
+      }
+      .time-input-row .time-sep {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 17px;
+        color: var(--ink-soft);
+        flex-shrink: 0;
       }
       .chip-row {
         display: flex;
@@ -512,21 +521,21 @@
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        height: 138px;
-        padding-top: 10px;
+        height: 210px;
+        padding-top: 16px;
       }
       .chart-day {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 5px;
+        gap: 8px;
         flex: 1;
       }
       .chart-bars {
         display: flex;
         align-items: flex-end;
         gap: 3px;
-        height: 80px;
+        height: 140px;
       }
       .chart-bar {
         width: 9px;
@@ -1000,16 +1009,24 @@
           <div class="form-row">
             <div class="field">
               <label>Tempo di studio</label>
-              <input type="time" id="entryStudyTime" step="60" />
+              <div class="time-input-row">
+                <input type="number" id="entryStudyHours" min="0" max="24" step="1" inputmode="numeric" placeholder="0" />
+                <span class="time-sep">:</span>
+                <input type="number" id="entryStudyMinutes" min="0" max="59" step="1" inputmode="numeric" placeholder="00" />
+              </div>
             </div>
             <div class="field">
               <label>Tempo di esercizi</label>
-              <input type="time" id="entryExerciseTime" step="60" />
+              <div class="time-input-row">
+                <input type="number" id="entryExerciseHours" min="0" max="24" step="1" inputmode="numeric" placeholder="0" />
+                <span class="time-sep">:</span>
+                <input type="number" id="entryExerciseMinutes" min="0" max="59" step="1" inputmode="numeric" placeholder="00" />
+              </div>
             </div>
           </div>
           <div class="form-row">
             <div class="field">
-              <label>Pagine/slide (facoltativo)</label>
+              <label>Pagine/slide</label>
               <input
                 type="number"
                 id="entryPages"
@@ -1020,7 +1037,7 @@
               />
             </div>
             <div class="field">
-              <label>Capitoli (facoltativo)</label>
+              <label>Capitoli</label>
               <input
                 type="number"
                 id="entryChapters"
@@ -1357,20 +1374,6 @@
         if (m === 0) return h + "h";
         return h + "h " + m + "min";
       }
-      function timeStrToMinutes(str) {
-        if (!str) return 0;
-        const parts = str.split(":");
-        if (parts.length < 2) return 0;
-        const h = parseInt(parts[0], 10) || 0;
-        const m = parseInt(parts[1], 10) || 0;
-        return h * 60 + m;
-      }
-      function minutesToTimeStr(min) {
-        min = Math.max(0, Math.round(min || 0));
-        const h = Math.floor(min / 60);
-        const m = min % 60;
-        return pad(h) + ":" + pad(m);
-      }
       function showToast(msg) {
         const t = document.getElementById("toast");
         t.textContent = msg;
@@ -1482,12 +1485,6 @@
           }
 
           cell.innerHTML = `<span>${d.getDate()}</span>`;
-          if (entry) {
-            const dot = document.createElement("div");
-            dot.className = "fill";
-            dot.style.background = `var(${userColorVar(currentUser)})`;
-            cell.appendChild(dot);
-          }
           cell.onclick = () => openDaySheet(iso);
           grid.appendChild(cell);
         }
@@ -1538,11 +1535,19 @@
 
         const entryKey = currentUser + "_" + iso;
         const entry = appData.entries[entryKey];
-        document.getElementById("entryStudyTime").value = entry
-          ? minutesToTimeStr(entry.studyMinutes)
+        const studyMin = entry ? entry.studyMinutes || 0 : 0;
+        const exerciseMin = entry ? entry.exerciseMinutes || 0 : 0;
+        document.getElementById("entryStudyHours").value = entry
+          ? Math.floor(studyMin / 60)
           : "";
-        document.getElementById("entryExerciseTime").value = entry
-          ? minutesToTimeStr(entry.exerciseMinutes)
+        document.getElementById("entryStudyMinutes").value = entry
+          ? studyMin % 60
+          : "";
+        document.getElementById("entryExerciseHours").value = entry
+          ? Math.floor(exerciseMin / 60)
+          : "";
+        document.getElementById("entryExerciseMinutes").value = entry
+          ? exerciseMin % 60
           : "";
         document.getElementById("entryPages").value =
           entry && entry.pages ? entry.pages : "";
@@ -1562,12 +1567,18 @@
 
       function saveEntry() {
         if (!pendingSheetDate) return;
-        const studyMinutes = timeStrToMinutes(
-          document.getElementById("entryStudyTime").value,
-        );
-        const exerciseMinutes = timeStrToMinutes(
-          document.getElementById("entryExerciseTime").value,
-        );
+        const clampMin = (v) => Math.min(59, Math.max(0, v || 0));
+        const studyMinutes =
+          (parseInt(document.getElementById("entryStudyHours").value) || 0) *
+            60 +
+          clampMin(parseInt(document.getElementById("entryStudyMinutes").value));
+        const exerciseMinutes =
+          (parseInt(document.getElementById("entryExerciseHours").value) ||
+            0) *
+            60 +
+          clampMin(
+            parseInt(document.getElementById("entryExerciseMinutes").value),
+          );
         const pagesVal = parseInt(document.getElementById("entryPages").value);
         const chaptersVal = parseInt(
           document.getElementById("entryChapters").value,
@@ -1876,8 +1887,8 @@
         for (let i = 0; i < 7; i++) {
           const col = document.createElement("div");
           col.className = "chart-day";
-          const h1 = Math.round((t1.byDayDesk[i] / maxH) * 80);
-          const h2 = Math.round((t2.byDayDesk[i] / maxH) * 80);
+          const h1 = Math.round((t1.byDayDesk[i] / maxH) * 140);
+          const h2 = Math.round((t2.byDayDesk[i] / maxH) * 140);
           col.innerHTML = `
       <div class="chart-bars">
         <div class="chart-bar user1" style="height:${Math.max(h1, t1.byDayDesk[i] > 0 ? 3 : 0)}px" title="${userName("user1")}: ${fmtHoursMin(t1.byDayDesk[i])}"></div>
@@ -2064,7 +2075,7 @@
       /* ============ POLLING & LIFECYCLE ============ */
       setInterval(() => {
         loadAndRender(true);
-      }, 59000);
+      }, 25000);
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") loadAndRender(true);
       });
